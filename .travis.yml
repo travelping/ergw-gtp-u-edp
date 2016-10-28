@@ -1,0 +1,35 @@
+language: generic
+sudo: required
+services:
+  - docker
+
+env:
+  global:
+    - BINTRAY_USER=roadrunnr
+    - secure: "vyK9o9iczxMWnApvM6rH6AQ6b3z/xjU4s0hqP+QkLU5sL3hqH3A4hOD4nzLp0izF6YPwvjBnOEXyasl42ZQRo7R2OdvEe5V5DWXjisfZ3IC0XmJyxBsep2rFh85BN4xiFdAU1yrloxM0UETJI53EXlnVauWEs2/xQcYf8E0/FjSYmWWo2w7P5BDLTUq39S8avNfMODS/2rJy/ZZHAb4jPYhiAQx4dvFU3wAlX61q7unrqXZyA6qmxRqfnBPlponfF+HmkYvyBajkPOJaoQeaiaYa8lXDx5sJSrB0qX8UOuDbYThLNGSjasnFAUArEDy7xXfhDNzV5jsWR7931SdI74mG+6tXmZpUu8Caj5HHqqckfpAQRqsS435+lTaHPxQKM72I3unGUqV3M/wX4eXFcXfjzbFMuX6ustXrNJNFgYqFGYuFY0lQLlFHAKTKYSgVy8D9ZuK6ftXn3w1HrzaTO+dZnbdK3zQmyTQFmh8hsndHM0Dmu8ljtCBhKCxk2fOIgqoSbjOYVk+AO+oU7ckTsB2KFh4AOeJ+9Rpf4dstXjPTo5zMd2tDsHi3apxBM+sXRxsApHzOVG91EGk7bIlLpWrIqumwgcGK/+lrcp9mmffS+ajcDAtStyXxQPf9YOriZnO/uTV32671upcer3mdEmzbrfKtbvOybHloSRD531Y="
+
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y devscripts
+  - docker build -t ergw -f priv/Dockerfile priv
+
+script:
+  - export SHORT_COMMIT_ID=$(git rev-parse --verify --short $TRAVIS_COMMIT)
+  - debchange -m -l "+$TRAVIS_JOB_NUMBER+git$SHORT_COMMIT_ID" 'Automatically built'
+  - mkdir artifacts
+  - docker run -v `pwd`:/build ergw
+    sh -c "
+      dpkg-buildpackage -b -uc && cp ../*deb artifacts
+    "
+
+after_success:
+  - priv/upload_bintray.sh
+  - echo "Done"
+
+notifications:
+  slack:
+  - secure: "k8ZbA09pgP3DVmtBIpx9FGkmSgrFXIICSR+UDPjHJ6nUUkL5bq3r4u2n+LeAMvkDxMHofJ+N5coL8CD3E5ztg6t8CM+/2h0HIfKT5sbdNZFA8jgn/pQ6oy5GW3mcNd7gIFLqxK7scV6eXBN7AJtOTKfbihMrMqojHc8qh3u1Zey6WYPZ9zx2Mm6yHbONxrat/8WZuHHRwA5r0NaHc/Ds468M2FFE5Rsshy49x6gF0Zw5bH+oEuirzOFqP/v7NUeDfVlOGxz63dETDf577FM/oAFluavjdtbzsltXeICOuXnb9fw48QDRUcytM0vdubngXO8gUu07P/5yQU6uu4+LLHKFtwTT8qj+UMiMyt9PAUroiLpWbPzQ28P5/STLiwTJh4otXkVO3jzLEMEFWHT3KYeh4oH6uVkwfpkRPPXR/2eTFBXrd5pRw3glwnrofOzgrOWE2o6Q1V8kqCak8UIOXvOsWPGPDmYgy2z+noE8GAlE4cbjRtnnWyehQSQBk4PJtyKkUVWv3KpCHJohpscWuiKH/MXxjDa9lsdgGQcOi+axUS1cbD5vn1/kmMemh16M10IH2WnW729Nj2pJ/D1fLEuMs3ZCVl2tDRFWtSQl/VqoOb0JLONoVAjEb3gchJiXXia2tG1auRM3DDECiOyKOMViH8XxvNY9uHg0WvVMJbs="
+
+branches:
+  only:
+    - master

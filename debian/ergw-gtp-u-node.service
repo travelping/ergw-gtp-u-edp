@@ -1,0 +1,13 @@
+[Unit]
+Description=session
+After=multi-user.target
+
+[Service]
+ExecStartPre=-/etc/ergw-gtp-u-edp/pre-start.sh
+ExecStart=/usr/bin/ergw-gtp-u-edp foreground
+Type=simple
+Environment="HOME=/root"
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
