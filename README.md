@@ -8,7 +8,7 @@ OTP application to package a erGW GTP-U Node.
 Installing on Ubuntu 16.04
 --------------------------
 
-Package for Ubuntu 16.04 are build on every commit to this repository and uploaded to bintray. In order to install them do this:
+Package for Ubuntu 16.04 are build on every commit to this repository and uploaded to packagecloud. In order to install them do this:
 
     sudo echo "deb http://ppa.launchpad.net/ergw/xenial/ubuntu xenial main" > /etc/apt/sources.list.d/ergw-xenial-ppa.list
     sudo echo "deb http://dl.bintray.com/roadrunnr/ergw xenial main" > /etc/apt/sources.list.d/ergw-xenial-bintray.list
