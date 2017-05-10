@@ -32,7 +32,7 @@
   2},
  {<<"gtp_u_edp">>,
   {git,"git://github.com/travelping/gtp_u_edp",
-       {ref,"023ff5000c4d3323f331fb654a477dd3ec3232b5"}},
+       {ref,"014fd62257082e081568c85cef2e6535bcd631b4"}},
   0},
  {<<"gtplib">>,
   {git,"https://github.com/travelping/gtplib.git",

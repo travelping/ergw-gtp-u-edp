@@ -1,3 +1,9 @@
+ergw-gtp-u-edp (1.3.0-1) UNRELEASED; urgency=medium
+
+  * Clear DF bit
+
+ -- Timo Lindhorst <timo.lindhorst@travelping.com>  Wed, 10 May 2017 19:18:41 +0200
+
 ergw-gtp-u-edp (1.2.0-1) zesty; urgency=medium
 
   * add update_pdp_context method
