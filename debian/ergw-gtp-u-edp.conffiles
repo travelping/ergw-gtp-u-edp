@@ -1,2 +1,2 @@
 /opt/ergw-gtp-u-edp/releases/0.1.0/vm.args
-/opt/ergw-gtp-u-edp/releases/0.1.0/sys.config
+/etc/ergw-gtp-u-edp/ergw-gtp-u-edp.config

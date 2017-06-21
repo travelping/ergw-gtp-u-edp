@@ -1,1 +1,2 @@
 debian/pre-start.sh etc/ergw-gtp-u-edp/
+config/ergw-gtp-u-edp.config etc/ergw-gtp-u-edp/
