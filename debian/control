@@ -12,7 +12,9 @@ Vcs-Browser: https://github.com/travelping/ergw-gtp-u-edp.git
 
 Package: ergw-gtp-u-edp
 Architecture: any
+Pre-Depends: dpkg (>= 1.17.14)
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Provides: ergw-gtp-u-node
 Description: GTP-c Node for erGW based GGSN and PGW
  This is the GTP-c part for a 3GPP GGSN and PGW implemented in Erlang.
 

@@ -25,7 +25,6 @@ override_dh_auto_install:
 	mkdir debian/ergw-gtp-u-edp
 	cp -a _build/prod/rel debian/ergw-gtp-u-edp/opt
 	echo "/opt/ergw-gtp-u-edp/releases/${DEB_VERSION_UPSTREAM}/vm.args" > debian/ergw-gtp-u-edp.conffiles
-	echo "/opt/ergw-gtp-u-edp/releases/${DEB_VERSION_UPSTREAM}/sys.config" >> debian/ergw-gtp-u-edp.conffiles
 
 override_dh_auto_clean:
 	rebar3 clean -a
