@@ -3,16 +3,11 @@ sudo: required
 services:
   - docker
 
-deploy:
-  provider: packagecloud
-  repository: "ergw"
-  username: "travelping"
-  token:
-    secure: "J/PzgFCDZZEWp9CWZ8sW3JVPkTQoUuV4WEn7MPi+WVGlV1ECjD5QkKl0a8SJtir7i2wOUXQe+3vpbGnXRTjb82yBgnIyeTErmMXykA5BqPi2qt4HIGhoI9gxtwo+uHK2i2Uq/80IbUAPQA3TkPV1uC7kW+FLwY29yEMY4OwA5HpG7Uomyn/g14mrRz4tM6ApIMghp/lYHs8BWZ710YeyKsoZYcnk6jbjVFyANtGeDXJfmBsvtR2xL5bHSjmA3/Ca3NVjGa/HtPlhgVmD/HMM6El9uHCiBskf+KUu3meX81CfAbn4VQ7EkNLdyOOOiCCvAILmrhw2Q0L4HKYpfYu2q3rkR13ppbI1komr+xmdJlvs5Z4xQ8k6PsTphGC+G4osEV1iOh/iz2/+ooFMHtOFeo62bw4x0y2RmQBLSD3Bw/XakZ2aml94g+8ZUiiod/kgagLbCHogl1YxoHpLafWLv2zOljkaqV0augcJPEvhVJbgfbm/wn37a9y8OsZCmW1FSVjpDkNrxubtI2rZyx/iTKRFSylQ1TpZJOAk6zqUMx85a4saFkUqcWj30h1c2hHOGeRm016n7+3ORMKBRF9cgPRRu/PxAFQHrx2Wf3N9YkL3lwG9/QXgwOdqmRONzCdzvsnaK6LuCPMWksQafzHBwRnzvzarBTBLHLMq8D0NGmg="
-
-  dist: "ubuntu/xenial"
-  skip_cleanup: true
-  package_glob: artifacts/*.deb
+env:
+  global:
+    - BUILD_IMAGE="ergw/ergw-gtp-u-edp"
+    - DOCKER_USERNAME="ergwci"
+    - secure: "dWQgAWw3Z9Yw4L/W9v8nRG1a6LgGzkko8E8PDEFhaHeVl41woB7+bzuydpSs9whdjkwyIzUspCrt5G8s1qUW9w/anoyWYgKZ3PRfEJM5x6+kO/zcJR5n2hzwcKXcPVJSitc864gQJOdO87Rm6sLGtL/fQT/fo15SxZUsQgwF5kRASe0+iKpCo7/lvqjw8q95Qpeadc9+3hM7yPr9rVWLkHK9rczL9QjPqwVOHJdlQEjrdMpopzNmPLTegiFodaxL5m85stCS8Sqd/CxgVw2B8Uz0VqRO4vWR9Rh6tsggtRQEqCNHI+NgzUW1jBCEoAYNZQVMdbBBLrUwd8Hj38Z6SKRtjpd2VNaXxERj2nIiqQHDoSIM4ObQcYqt5P4StFa8e5u5Ukl7e3IACstjKWDvgZly1SwdCV5YK0HIYMMX/lnHnO1no92/dMB9eOM+PnDI/DsQhF6nuCYGF1hyBHutuAlDoPJE5MX82g30ZCSYpsspoHxIukE8oboUx0yMhcFFDcJ3WqbDWlZvXYr7abmhIrqQmStQoWHUk4svTuH8y4+ZLb2cywHZ1wZOhBUqPyvh2AjH1YeFMIl72fuUvOjz5CKYjzCzQ3geEpyyMCU10kGIPMNf4sTMlk4ILIabFixniTk8ZFLwAcoduR8PK6psWdcaHtEw+GwjuITcHW6szVo="
 
 before_install:
   - docker pull ergw/ergw-docker-build
@@ -27,10 +22,19 @@ script:
       dpkg-buildpackage -b -uc -nc &&
       cp ../*deb artifacts
     "
+  - docker build -t $BUILD_IMAGE -f docker/Dockerfile .
+
+after_success:
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+  - export TAG=`if [ "$TRAVIS_EVENT_TYPE" == "pull_request" ]; then echo PR-$TRAVIS_PULL_REQUEST_BRANCH ; else echo $TRAVIS_BRANCH ; fi`
+  - if [ "$TAG" == "master" ]; then export TAG="latest"; fi
+  - docker tag $BUILD_IMAGE $BUILD_IMAGE:$TAG
+  - docker push $BUILD_IMAGE:$TAG
+  - echo "docker push done"
 
 notifications:
   slack:
-  - secure: "k8ZbA09pgP3DVmtBIpx9FGkmSgrFXIICSR+UDPjHJ6nUUkL5bq3r4u2n+LeAMvkDxMHofJ+N5coL8CD3E5ztg6t8CM+/2h0HIfKT5sbdNZFA8jgn/pQ6oy5GW3mcNd7gIFLqxK7scV6eXBN7AJtOTKfbihMrMqojHc8qh3u1Zey6WYPZ9zx2Mm6yHbONxrat/8WZuHHRwA5r0NaHc/Ds468M2FFE5Rsshy49x6gF0Zw5bH+oEuirzOFqP/v7NUeDfVlOGxz63dETDf577FM/oAFluavjdtbzsltXeICOuXnb9fw48QDRUcytM0vdubngXO8gUu07P/5yQU6uu4+LLHKFtwTT8qj+UMiMyt9PAUroiLpWbPzQ28P5/STLiwTJh4otXkVO3jzLEMEFWHT3KYeh4oH6uVkwfpkRPPXR/2eTFBXrd5pRw3glwnrofOzgrOWE2o6Q1V8kqCak8UIOXvOsWPGPDmYgy2z+noE8GAlE4cbjRtnnWyehQSQBk4PJtyKkUVWv3KpCHJohpscWuiKH/MXxjDa9lsdgGQcOi+axUS1cbD5vn1/kmMemh16M10IH2WnW729Nj2pJ/D1fLEuMs3ZCVl2tDRFWtSQl/VqoOb0JLONoVAjEb3gchJiXXia2tG1auRM3DDECiOyKOMViH8XxvNY9uHg0WvVMJbs="
+    - secure: "k8ZbA09pgP3DVmtBIpx9FGkmSgrFXIICSR+UDPjHJ6nUUkL5bq3r4u2n+LeAMvkDxMHofJ+N5coL8CD3E5ztg6t8CM+/2h0HIfKT5sbdNZFA8jgn/pQ6oy5GW3mcNd7gIFLqxK7scV6eXBN7AJtOTKfbihMrMqojHc8qh3u1Zey6WYPZ9zx2Mm6yHbONxrat/8WZuHHRwA5r0NaHc/Ds468M2FFE5Rsshy49x6gF0Zw5bH+oEuirzOFqP/v7NUeDfVlOGxz63dETDf577FM/oAFluavjdtbzsltXeICOuXnb9fw48QDRUcytM0vdubngXO8gUu07P/5yQU6uu4+LLHKFtwTT8qj+UMiMyt9PAUroiLpWbPzQ28P5/STLiwTJh4otXkVO3jzLEMEFWHT3KYeh4oH6uVkwfpkRPPXR/2eTFBXrd5pRw3glwnrofOzgrOWE2o6Q1V8kqCak8UIOXvOsWPGPDmYgy2z+noE8GAlE4cbjRtnnWyehQSQBk4PJtyKkUVWv3KpCHJohpscWuiKH/MXxjDa9lsdgGQcOi+axUS1cbD5vn1/kmMemh16M10IH2WnW729Nj2pJ/D1fLEuMs3ZCVl2tDRFWtSQl/VqoOb0JLONoVAjEb3gchJiXXia2tG1auRM3DDECiOyKOMViH8XxvNY9uHg0WvVMJbs="
 
 branches:
   only:

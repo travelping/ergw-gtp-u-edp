@@ -1,7 +1,7 @@
 ergw-gtp-u-edp
 ==============
 
-[![Build Status](https://travis-ci.org/travelping/ergw-gtp-u-edp.svg?branch=master)](https://travis-ci.org/travelping/ergw-gtp-u-edp)
+[![Build Status](https://travis-ci.org/KilianDargel/ergw-gtp-u-edp.svg?branch=master)](https://travis-ci.org/KilianDargel/ergw-gtp-u-edp)
 
 OTP application to package a erGW GTP-U Node.
 
