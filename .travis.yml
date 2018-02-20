@@ -3,12 +3,6 @@ sudo: required
 services:
   - docker
 
-deploy:
-  dist: "ubuntu/xenial"
-  skip_cleanup: true
-  on:
-    branch: master
-
 env:
   global:
     - BUILD_IMAGE="ergw/ergw-gtp-u-edp"
