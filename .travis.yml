@@ -4,14 +4,8 @@ services:
   - docker
 
 deploy:
-  provider: packagecloud
-  repository: "ergw"
-  username: "travelping"
-  token:
-    secure: "J/PzgFCDZZEWp9CWZ8sW3JVPkTQoUuV4WEn7MPi+WVGlV1ECjD5QkKl0a8SJtir7i2wOUXQe+3vpbGnXRTjb82yBgnIyeTErmMXykA5BqPi2qt4HIGhoI9gxtwo+uHK2i2Uq/80IbUAPQA3TkPV1uC7kW+FLwY29yEMY4OwA5HpG7Uomyn/g14mrRz4tM6ApIMghp/lYHs8BWZ710YeyKsoZYcnk6jbjVFyANtGeDXJfmBsvtR2xL5bHSjmA3/Ca3NVjGa/HtPlhgVmD/HMM6El9uHCiBskf+KUu3meX81CfAbn4VQ7EkNLdyOOOiCCvAILmrhw2Q0L4HKYpfYu2q3rkR13ppbI1komr+xmdJlvs5Z4xQ8k6PsTphGC+G4osEV1iOh/iz2/+ooFMHtOFeo62bw4x0y2RmQBLSD3Bw/XakZ2aml94g+8ZUiiod/kgagLbCHogl1YxoHpLafWLv2zOljkaqV0augcJPEvhVJbgfbm/wn37a9y8OsZCmW1FSVjpDkNrxubtI2rZyx/iTKRFSylQ1TpZJOAk6zqUMx85a4saFkUqcWj30h1c2hHOGeRm016n7+3ORMKBRF9cgPRRu/PxAFQHrx2Wf3N9YkL3lwG9/QXgwOdqmRONzCdzvsnaK6LuCPMWksQafzHBwRnzvzarBTBLHLMq8D0NGmg="
   dist: "ubuntu/xenial"
   skip_cleanup: true
-  package_glob: artifacts/*.deb
   on:
     branch: master
 
