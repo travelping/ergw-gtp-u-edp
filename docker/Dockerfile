@@ -41,7 +41,7 @@ RUN     apk update && \
 	apk --no-cache upgrade && \
 	apk --no-cache add ncurses-libs libcrypto1.0
 COPY docker/docker-entrypoint.sh /
-COPY config/ergw-gtp-u-edp.config /etc/ergw-gtp-u-node/
+COPY config/ergw-gtp-u-edp.config /etc/ergw-gtp-u-edp/
 
 RUN     mkdir -p /var/lib/ergw/ && \
 	touch /var/lib/ergw/ergw.state
