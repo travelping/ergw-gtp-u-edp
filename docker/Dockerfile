@@ -49,4 +49,4 @@ RUN     mkdir -p /var/lib/ergw/ && \
 COPY    --from=build-env /build/_build/prod+native/rel/ /opt/
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["/opt/ergw-gtp-u-node/bin/ergw-gtp-u-node", "foreground"]
+CMD ["/opt/ergw-gtp-u-edp/bin/ergw-gtp-u-edp", "foreground"]
