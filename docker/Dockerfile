@@ -12,6 +12,7 @@ RUN     apk update && apk --no-cache upgrade && \
 		erlang-kernel erlang-parsetools erlang-public-key \
 		erlang-os-mon \
 		erlang-runtime-tools erlang-sasl erlang-ssl erlang-stdlib \
+		erlang-observer \
 		erlang-syntax-tools \
 	    gcc \
 	    git \
